@@ -1,7 +1,19 @@
+
 import { ROLES, type Role } from '../types/domain'
 
 export function parseRole(value: unknown): Role | null {
-  return typeof value === 'string' && ROLES.includes(value as Role) ? (value as Role) : null
+  if (typeof value !== 'string') return null
+
+  const roleMap: Record<string, Role> = {
+    admin: 'admin',
+    manager: 'manager',
+    project_lead: 'manager',
+    member: 'member',
+    viewer: 'viewer',
+    'General Staff': 'viewer',
+  }
+
+  return roleMap[value] ?? (ROLES.includes(value as Role) ? value as Role : null)
 }
 
 export function canReadKnowledge(role: Role | null): boolean {

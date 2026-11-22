@@ -1,13 +1,6 @@
+
 import { useState, type FormEvent } from 'react'
-import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  updateProfile,
-} from 'firebase/auth'
-import { formatFirebaseError } from '../lib/errors'
-import { getServices } from '../lib/firebase'
+import { getSupabase } from '../lib/supabase'
 
 export function SignInPage() {
   const [mode, setMode] = useState<'sign-in' | 'create'>('sign-in')
@@ -21,28 +14,38 @@ export function SignInPage() {
     event.preventDefault()
     setPending(true)
     setError(null)
+
     try {
-      const auth = getServices().auth
+      const supabase = getSupabase()
+
       if (mode === 'create') {
-        const credential = await createUserWithEmailAndPassword(auth, email.trim(), password)
-        if (name.trim()) await updateProfile(credential.user, { displayName: name.trim() })
+        const { error } = await supabase.auth.signUp({
+          email: email.trim(),
+          password,
+          options: {
+            data: {
+              name: name.trim(),
+            },
+          },
+        })
+
+        if (error) throw error
+
+        setError(
+          'Account created. Check your email to confirm your account before signing in.',
+        )
       } else {
-        await signInWithEmailAndPassword(auth, email.trim(), password)
+        const { error } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        })
+
+        if (error) throw error
       }
     } catch (caught) {
-      setError(formatFirebaseError(caught))
-    } finally {
-      setPending(false)
-    }
-  }
-
-  async function signInWithGoogle() {
-    setPending(true)
-    setError(null)
-    try {
-      await signInWithPopup(getServices().auth, new GoogleAuthProvider())
-    } catch (caught) {
-      setError(formatFirebaseError(caught))
+      setError(
+        caught instanceof Error ? caught.message : 'Something went wrong.',
+      )
     } finally {
       setPending(false)
     }
@@ -51,15 +54,24 @@ export function SignInPage() {
   return (
     <main className="screen">
       <h1>Living Organizational Memory</h1>
-      <p className="lede">Sign in to find project knowledge and keep the next team from starting over.</p>
+      <p className="lede">
+        Sign in to find project knowledge and keep the next team from starting over.
+      </p>
+
       <form className="card" onSubmit={onSubmit}>
         <h2>{mode === 'create' ? 'Create your account' : 'Sign in'}</h2>
+
         {mode === 'create' ? (
           <label>
             Name
-            <input value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" />
+            <input
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              autoComplete="name"
+            />
           </label>
         ) : null}
+
         <label>
           Email
           <input
@@ -70,6 +82,7 @@ export function SignInPage() {
             autoComplete="email"
           />
         </label>
+
         <label>
           Password
           <input
@@ -81,17 +94,29 @@ export function SignInPage() {
             autoComplete={mode === 'create' ? 'new-password' : 'current-password'}
           />
         </label>
+
         {error ? <p className="error" role="alert">{error}</p> : null}
-        <button type="submit" disabled={pending}>{mode === 'create' ? 'Create account' : 'Sign in'}</button>
-        <button type="button" className="secondary" disabled={pending} onClick={signInWithGoogle}>
-          Continue with Google
+
+        <button type="submit" disabled={pending}>
+          {pending
+            ? 'Please wait...'
+            : mode === 'create'
+              ? 'Create account'
+              : 'Sign in'}
         </button>
+
         <button
           type="button"
           className="ghost"
-          onClick={() => setMode(mode === 'create' ? 'sign-in' : 'create')}
+          disabled={pending}
+          onClick={() => {
+            setMode(mode === 'create' ? 'sign-in' : 'create')
+            setError(null)
+          }}
         >
-          {mode === 'create' ? 'I already have an account' : 'Create an account'}
+          {mode === 'create'
+            ? 'I already have an account'
+            : 'Create an account'}
         </button>
       </form>
     </main>

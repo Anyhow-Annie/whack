@@ -1,87 +1,63 @@
-import type { User } from 'firebase/auth'
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  serverTimestamp,
-  setDoc,
-  Timestamp,
-  updateDoc,
-} from 'firebase/firestore'
-import { getServices, isLocalPreview } from '../lib/firebase'
-import { localEmployee, localEmployees, localUpdateEmployee } from '../local/memory'
-import type { Employee, Role } from '../types/domain'
+
+import { getSupabase } from '../lib/supabase'
+import { localEmployee, localEmployees } from '../local/memory'
+import type { Employee } from '../types/domain'
+import { isSupabaseConfigured } from '../lib/supabase'
 import { parseRole } from '../auth/access'
 
-function toDate(value: unknown): Date | null {
-  return value instanceof Timestamp ? value.toDate() : null
-}
-
-function toEmployee(id: string, data: Record<string, unknown>): Employee {
+function toEmployee(data: Record<string, unknown>): Employee {
   return {
-    uid: id,
+    uid: String(data.id),
     email: String(data.email ?? ''),
-    displayName: String(data.displayName ?? ''),
-    title: String(data.title ?? ''),
+    displayName: String(data.name ?? ''),
+    title: '',
     department: String(data.department ?? ''),
     role: parseRole(data.role) ?? 'viewer',
-    createdAt: toDate(data.createdAt),
-    updatedAt: toDate(data.updatedAt),
+    createdAt: data.created_at ? new Date(String(data.created_at)) : null,
+    updatedAt: null,
   }
 }
 
 export async function getEmployee(uid: string): Promise<Employee | null> {
-  if (isLocalPreview()) return localEmployee(uid)
-  const snapshot = await getDoc(doc(getServices().db, 'employees', uid))
-  if (!snapshot.exists()) return null
-  return toEmployee(snapshot.id, snapshot.data())
+  if (!isSupabaseConfigured()) return localEmployee(uid)
+
+  const { data, error } = await getSupabase()
+    .from('profiles')
+    .select('*')
+    .eq('id', uid)
+    .maybeSingle()
+
+  if (error) throw error
+  return data ? toEmployee(data) : null
 }
 
 export async function listEmployees(): Promise<Employee[]> {
-  if (isLocalPreview()) return localEmployees()
-  const snapshot = await getDocs(collection(getServices().db, 'employees'))
-  return snapshot.docs
-    .map((item) => toEmployee(item.id, item.data()))
-    .sort((a, b) => a.email.localeCompare(b.email))
+  if (!isSupabaseConfigured()) return localEmployees()
+
+  const { data, error } = await getSupabase()
+    .from('profiles')
+    .select('*')
+    .order('email')
+
+  if (error) throw error
+  return (data ?? []).map((item) => toEmployee(item))
 }
 
-export async function ensureEmployeeProfile(user: User): Promise<Employee> {
-  const existing = await getEmployee(user.uid)
-  if (existing) return existing
-  if (!user.email) {
-    throw new Error('Your account needs an email address before a profile can be created.')
-  }
+export async function ensureEmployeeProfile(): Promise<Employee> {
+  const { data: { user }, error: authError } = await getSupabase().auth.getUser()
 
-  const profile = {
-    uid: user.uid,
-    email: user.email,
-    displayName: user.displayName?.trim() || user.email.split('@')[0] || 'Employee',
-    title: '',
-    department: '',
-    role: 'viewer' as Role,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  }
+  if (authError) throw authError
+  if (!user) throw new Error('You must sign in first.')
 
-  await setDoc(doc(getServices().db, 'employees', user.uid), profile)
-  const created = await getEmployee(user.uid)
-  if (!created) throw new Error('Your profile was saved but could not be read back.')
-  return created
+  const profile = await getEmployee(user.id)
+  if (!profile) throw new Error('Your employee profile has not been created yet.')
+
+  return profile
 }
 
 export async function updateEmployeeProfile(
-  uid: string,
-  input: { displayName: string; title: string; department: string },
+  _uid: string,
+  _input: { displayName: string; title: string; department: string },
 ): Promise<void> {
-  if (isLocalPreview()) {
-    localUpdateEmployee(uid, input)
-    return
-  }
-  await updateDoc(doc(getServices().db, 'employees', uid), {
-    displayName: input.displayName.trim(),
-    title: input.title.trim(),
-    department: input.department.trim(),
-    updatedAt: serverTimestamp(),
-  })
+  throw new Error('Profile editing is not available in this demo yet.')
 }

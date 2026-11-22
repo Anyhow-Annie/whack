@@ -1,40 +1,48 @@
+
+import { getSupabase, isSupabaseConfigured } from '../lib/supabase'
 import {
-  collection,
-  doc,
-  getDocs,
-  serverTimestamp,
-  setDoc,
-  Timestamp,
-  updateDoc,
-} from 'firebase/firestore'
-import { getServices, isLocalPreview } from '../lib/firebase'
-import { localAddProjectMember, localCreateProject, localProjects } from '../local/memory'
-import type { Project, ProjectStatus } from '../types/domain'
-
-function toDate(value: unknown): Date | null {
-  return value instanceof Timestamp ? value.toDate() : null
-}
-
-function toProject(id: string, data: Record<string, unknown>): Project {
-  const status: ProjectStatus = data.status === 'archived' ? 'archived' : 'active'
-  return {
-    id,
-    name: String(data.name ?? ''),
-    description: String(data.description ?? ''),
-    status,
-    ownerId: String(data.ownerId ?? ''),
-    memberIds: Array.isArray(data.memberIds) ? data.memberIds.map(String) : [],
-    createdAt: toDate(data.createdAt),
-    updatedAt: toDate(data.updatedAt),
-  }
-}
+  localAddProjectMember,
+  localCreateProject,
+  localProjects,
+} from '../local/memory'
+import type { Project } from '../types/domain'
 
 export async function listProjects(): Promise<Project[]> {
-  if (isLocalPreview()) return localProjects()
-  const snapshot = await getDocs(collection(getServices().db, 'projects'))
-  return snapshot.docs
-    .map((item) => toProject(item.id, item.data()))
-    .sort((a, b) => (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0))
+  if (!isSupabaseConfigured()) return localProjects()
+
+  const supabase = getSupabase()
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser()
+
+  if (authError) throw authError
+  if (!user) return []
+
+  const { data, error } = await supabase
+    .from('projects')
+    .select('id, title, description, created_at')
+    .order('created_at', { ascending: false })
+    .returns<{
+      id: string
+      title: string
+      description: string | null
+      created_at: string | null
+    }[]>()
+
+  if (error) throw error
+
+  return (data ?? []).map((item) => ({
+    id: item.id,
+    name: item.title,
+    description: item.description ?? '',
+    status: 'active',
+    ownerId: '',
+    memberIds: [user.id],
+    createdAt: item.created_at ? new Date(item.created_at) : null,
+    updatedAt: null,
+  }))
 }
 
 export async function createProject(input: {
@@ -42,30 +50,23 @@ export async function createProject(input: {
   description: string
   ownerId: string
 }): Promise<string> {
-  if (isLocalPreview()) return localCreateProject(input)
-  const ref = doc(collection(getServices().db, 'projects'))
-  await setDoc(ref, {
-    name: input.name.trim(),
-    description: input.description.trim(),
-    status: 'active',
-    ownerId: input.ownerId,
-    memberIds: [input.ownerId],
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  })
-  return ref.id
+  if (!isSupabaseConfigured()) return localCreateProject(input)
+
+  throw new Error(
+    'Project creation is not enabled yet. It requires a secure database operation.',
+  )
 }
 
-export async function addProjectMember(project: Project, memberId: string): Promise<void> {
-  if (isLocalPreview()) {
+export async function addProjectMember(
+  project: Project,
+  memberId: string,
+): Promise<void> {
+  if (!isSupabaseConfigured()) {
     localAddProjectMember(project.id, memberId)
     return
   }
-  const memberIds = project.memberIds.includes(memberId)
-    ? project.memberIds
-    : [...project.memberIds, memberId]
-  await updateDoc(doc(getServices().db, 'projects', project.id), {
-    memberIds,
-    updatedAt: serverTimestamp(),
-  })
+
+  throw new Error(
+    'Adding project members is not enabled yet. It requires a secure database operation.',
+  )
 }
