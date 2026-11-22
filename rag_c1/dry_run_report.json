@@ -1,0 +1,90 @@
+{
+  "mode": "dry-run",
+  "embed_dims": 768,
+  "chunk_size": 800,
+  "chunk_overlap": 100,
+  "source_docs": 2,
+  "mapped": 2,
+  "unresolved_count": 0,
+  "total_chunks": 20,
+  "uploaded": 0,
+  "departments": {
+    "General": 2
+  },
+  "access_levels": {
+    "All employees": 2
+  },
+  "subcategories": {
+    "org_profile": 1,
+    "employee_directory": 1
+  },
+  "unresolved": [],
+  "mapped_docs": [
+    {
+      "whack_document_id": "ORG-001",
+      "title": "WHACK Black box \u2014 Organization Profile",
+      "document_type": "Organization Profile",
+      "path": "01_Organization_Core/ORG-001_Organization_Profile.md",
+      "mapping": {
+        "department": "General",
+        "access_level": "All employees",
+        "subcategory": "org_profile",
+        "status": "resolved",
+        "reason": "organization-level institutional / org-wide general"
+      },
+      "chunk_count": 5,
+      "chunk_previews": [
+        {
+          "chunk_index": 0,
+          "chars": 800,
+          "preview": "# WHACK Black box \u2014 Organization Profile  - **Document ID:** ORG-001 - **Author / Department:** Executive Committee - **"
+        },
+        {
+          "chunk_index": 1,
+          "chars": 800,
+          "preview": "h; director/Production Manager alignment; design-team formation; rehearsal and build; paper tech and technical rehearsal"
+        },
+        {
+          "chunk_index": 2,
+          "chars": 800,
+          "preview": " 4 Publicity staff - 2 Dramaturgs  Each season uses a new cohort. A role title remains stable even when its holder chang"
+        }
+      ],
+      "content_chars": 2938
+    },
+    {
+      "whack_document_id": "ORG-002",
+      "title": "Employee Directory \u2014 Four-Season Archive",
+      "document_type": "Employee Directory",
+      "path": "01_Organization_Core/ORG-002_Employee_Directory.md",
+      "mapping": {
+        "department": "General",
+        "access_level": "All employees",
+        "subcategory": "employee_directory",
+        "status": "resolved",
+        "reason": "organization-level institutional / org-wide general"
+      },
+      "chunk_count": 15,
+      "chunk_previews": [
+        {
+          "chunk_index": 0,
+          "chars": 800,
+          "preview": "# Employee Directory \u2014 Four-Season Archive  - **Document ID:** ORG-002 - **Author / Department:** Operations & Records -"
+        },
+        {
+          "chunk_index": 1,
+          "chars": 800,
+          "preview": "| Theo Alvarez | Stage Manager | theoalvarez@whack.example | 555-01003 | | WH-01-005 | June Whitaker | Director | junewh"
+        },
+        {
+          "chunk_index": 2,
+          "chars": 800,
+          "preview": "stume Designer | julianreed@whack.example | 555-01012 | | WH-01-014 | Amara Cole | Costume Designer | amaracole@whack.ex"
+        }
+      ],
+      "content_chars": 10314
+    }
+  ],
+  "mapping_doc": "/cursor/stores/bc-afe852e3-2de1-4b0c-9c98-20338788c02b/docs/rag_c1/mapping_table.md",
+  "note": "Person B corpus contract: department=position|General; access_level=position|All employees. Permission stays on profiles/position_role_map \u2014 never on chunk metadata."
+}

@@ -1,0 +1,15 @@
+{
+  "phase": "done",
+  "stats": {
+    "docs_inserted": 0,
+    "docs_reused": 378,
+    "docs_failed": 0,
+    "chunks_inserted": 0,
+    "chunks_skipped": 742,
+    "chunks_failed": 0,
+    "unresolved_docs": 0,
+    "errors": [],
+    "vectors_reused": true
+  },
+  "updated_at": "2026-11-22T15:21:06.731539+00:00"
+}

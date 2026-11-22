@@ -1,0 +1,48 @@
+Loaded 742 embedded chunks
+Vector check: {'count': 742, 'unique_chunk_ids': 742, 'dupes': 0, 'missing_embedding': 0, 'bad_dims': 0, 'bad_finite': 0, 'bad_norm': 0, 'vectors_ok': True}
+Existing docs with source_doc_id=200 existing chunk_ids=0
+Wrote dry-run report → /cursor/stores/bc-afe852e3-2de1-4b0c-9c98-20338788c02b/docs/rag_c1/embedding_recovery_dry_run.md
+DRY-RUN complete compatible=True docs_insert=178 chunks_insert=742
+Loaded 742 embedded chunks
+Vector check: {'count': 742, 'unique_chunk_ids': 742, 'dupes': 0, 'missing_embedding': 0, 'bad_dims': 0, 'bad_finite': 0, 'bad_norm': 0, 'vectors_ok': True}
+Existing docs with source_doc_id=200 existing chunk_ids=0
+Wrote dry-run report → /cursor/stores/bc-afe852e3-2de1-4b0c-9c98-20338788c02b/docs/rag_c1/embedding_recovery_dry_run.md
+Documents inserted=178 reused=200 failed=0 unresolved=0
+Chunks to insert=742 already_skipped=0
+  progress inserted=25 skipped=0 failed=0 (~25/742)
+  progress inserted=50 skipped=0 failed=0 (~50/742)
+  progress inserted=75 skipped=0 failed=0 (~75/742)
+  progress inserted=100 skipped=0 failed=0 (~100/742)
+  progress inserted=125 skipped=0 failed=0 (~125/742)
+  progress inserted=150 skipped=0 failed=0 (~150/742)
+  progress inserted=175 skipped=0 failed=0 (~175/742)
+  progress inserted=200 skipped=0 failed=0 (~200/742)
+  progress inserted=225 skipped=0 failed=0 (~225/742)
+  progress inserted=250 skipped=0 failed=0 (~250/742)
+  progress inserted=275 skipped=0 failed=0 (~275/742)
+  progress inserted=300 skipped=0 failed=0 (~300/742)
+  progress inserted=325 skipped=0 failed=0 (~325/742)
+Loaded 742 embedded chunks
+Vector check: {'count': 742, 'unique_chunk_ids': 742, 'dupes': 0, 'missing_embedding': 0, 'bad_dims': 0, 'bad_finite': 0, 'bad_norm': 0, 'vectors_ok': True}
+Existing docs with source_doc_id=378 existing chunk_ids=350
+Wrote dry-run report → /cursor/stores/bc-afe852e3-2de1-4b0c-9c98-20338788c02b/docs/rag_c1/embedding_recovery_dry_run.md
+Documents inserted=0 reused=378 failed=0 unresolved=0
+Chunks to insert=392 already_skipped=350
+  progress inserted=25 skipped=350 failed=0 (~375/742)
+  progress inserted=50 skipped=350 failed=0 (~400/742)
+  progress inserted=75 skipped=350 failed=0 (~425/742)
+  progress inserted=100 skipped=350 failed=0 (~450/742)
+  progress inserted=125 skipped=350 failed=0 (~475/742)
+  progress inserted=150 skipped=350 failed=0 (~500/742)
+  progress inserted=175 skipped=350 failed=0 (~525/742)
+  progress inserted=200 skipped=350 failed=0 (~550/742)
+  progress inserted=225 skipped=350 failed=0 (~575/742)
+  progress inserted=250 skipped=350 failed=0 (~600/742)
+  progress inserted=275 skipped=350 failed=0 (~625/742)
+  progress inserted=300 skipped=350 failed=0 (~650/742)
+  progress inserted=325 skipped=350 failed=0 (~675/742)
+  progress inserted=350 skipped=350 failed=0 (~700/742)
+  progress inserted=375 skipped=350 failed=0 (~725/742)
+  progress inserted=392 skipped=350 failed=0 (~742/742)
+DONE {"docs_inserted": 0, "docs_reused": 378, "docs_failed": 0, "chunks_inserted": 392, "chunks_skipped": 350, "chunks_failed": 0, "unresolved_docs": 0, "vectors_reused": true}
+errors=0

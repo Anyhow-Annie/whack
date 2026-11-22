@@ -1,0 +1,36 @@
+Loaded 742 embedded chunks
+Existing docs with source_doc_id=8 existing chunk_ids=8
+Documents inserted=370 reused=8 failed=0 unresolved=0
+Chunks to insert=734 already_skipped=8
+  progress inserted=25 skipped=8 failed=0 (~33/742)
+  progress inserted=50 skipped=8 failed=0 (~58/742)
+  progress inserted=75 skipped=8 failed=0 (~83/742)
+  progress inserted=100 skipped=8 failed=0 (~108/742)
+  progress inserted=125 skipped=8 failed=0 (~133/742)
+  progress inserted=150 skipped=8 failed=0 (~158/742)
+  progress inserted=175 skipped=8 failed=0 (~183/742)
+  progress inserted=200 skipped=8 failed=0 (~208/742)
+  progress inserted=225 skipped=8 failed=0 (~233/742)
+  progress inserted=250 skipped=8 failed=0 (~258/742)
+  progress inserted=275 skipped=8 failed=0 (~283/742)
+  progress inserted=300 skipped=8 failed=0 (~308/742)
+  progress inserted=325 skipped=8 failed=0 (~333/742)
+  progress inserted=350 skipped=8 failed=0 (~358/742)
+  progress inserted=375 skipped=8 failed=0 (~383/742)
+  progress inserted=400 skipped=8 failed=0 (~408/742)
+  progress inserted=425 skipped=8 failed=0 (~433/742)
+  progress inserted=450 skipped=8 failed=0 (~458/742)
+  progress inserted=475 skipped=8 failed=0 (~483/742)
+  progress inserted=500 skipped=8 failed=0 (~508/742)
+  progress inserted=525 skipped=8 failed=0 (~533/742)
+  progress inserted=550 skipped=8 failed=0 (~558/742)
+  progress inserted=575 skipped=8 failed=0 (~583/742)
+  progress inserted=600 skipped=8 failed=0 (~608/742)
+  progress inserted=625 skipped=8 failed=0 (~633/742)
+  progress inserted=650 skipped=8 failed=0 (~658/742)
+  progress inserted=675 skipped=8 failed=0 (~683/742)
+  progress inserted=700 skipped=8 failed=0 (~708/742)
+  progress inserted=725 skipped=8 failed=0 (~733/742)
+  progress inserted=734 skipped=8 failed=0 (~742/742)
+DONE {"docs_inserted": 370, "docs_reused": 8, "docs_failed": 0, "chunks_inserted": 734, "chunks_skipped": 8, "chunks_failed": 0, "unresolved_docs": 0}
+errors=0
