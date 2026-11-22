@@ -1,0 +1,36 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function hasRole(roles) {
+      return signedIn() && request.auth.token.role in roles;
+    }
+
+    function project(projectId) {
+      return firestore.get(/databases/(default)/documents/projects/$(projectId)).data;
+    }
+
+    function isProjectMember(projectId) {
+      return signedIn() && (
+        request.auth.token.role == 'admin'
+        || request.auth.uid == project(projectId).ownerId
+        || request.auth.uid in project(projectId).memberIds
+      );
+    }
+
+    match /documents/{projectId}/{documentId}/{fileName} {
+      allow read: if hasRole(['admin', 'manager', 'member', 'viewer']);
+
+      allow write: if hasRole(['admin', 'manager', 'member'])
+        && isProjectMember(projectId)
+        && request.resource.size < 20 * 1024 * 1024
+        && request.resource.contentType.matches('^(text/.+|application/pdf|application/json)$');
+
+      allow delete: if hasRole(['admin']);
+    }
+  }
+}
